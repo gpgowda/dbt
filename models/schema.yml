@@ -1,41 +1,36 @@
 version: 2
 
+sources:
+  - name: crypto_analytics
+    database: coin-49
+    schema: crypto_analytics_us
+
+    tables:
+      - name: raw_coingecko
+      - name: raw_fear_greed
+
 models:
-  - name: customers
-    description: One record per customer
-    columns:
-      - name: customer_id
-        description: Primary key
-        tests:
-          - unique
-          - not_null
-      - name: first_order_date
-        description: NULL when a customer has not yet placed an order.
 
-  - name: stg_customers
-    description: This model cleans up customer data
+  - name: stg_coingecko
+    description: Cleaned CoinGecko data
+
     columns:
-      - name: customer_id
-        description: Primary key
+      - name: id
         tests:
-          - unique
           - not_null
 
-  - name: stg_orders
-    description: This model cleans up order data
+      - name: symbol
+        tests:
+          - not_null
+
+      - name: price_usd
+        tests:
+          - not_null
+
+  - name: stg_fear_greed
+    description: Fear and Greed sentiment data
+
     columns:
-      - name: order_id
-        description: Primary key
-        tests:
-          - unique
-          - not_null
-      - name: status
-        tests:
-          - accepted_values:
-              values: ['placed', 'shipped', 'completed', 'return_pending', 'returned']
-      - name: customer_id
+      - name: fear_greed_value
         tests:
           - not_null
-          - relationships:
-              to: ref('stg_customers')
-              field: customer_id
